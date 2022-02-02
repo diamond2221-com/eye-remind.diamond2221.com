@@ -1,3 +1,4 @@
+import { FULLPATH } from "./../config/index";
 import axios, {
   AxiosResponse,
   AxiosRequestConfig,
@@ -22,10 +23,7 @@ declare interface Datas {
   [key: string]: any;
 }
 
-export const baseURL =
-  process.env.NODE_ENV === "production"
-    ? "https://api.diamond2221.com/EYE-REMIND"
-    : "/";
+export const baseURL = FULLPATH;
 
 class HttpRequest {
   public queue: Array<{

@@ -5,38 +5,49 @@ import { UseStatusResponse } from "@/types/modules/home";
 /**
  * @description 设置以滴药
  * @author ZhangYù
- * @date 28/01/2022
+ * @date 02/02/2022
  * @export
- * @return {*}
+ * @param {number} id
+ * @return {*}  {Promise<AxiosResponse<Response<null>>>}
  */
-export function SetToDrop(): Promise<AxiosResponse<Response<string>>> {
-  return request<string>({
-    url: "/set/to",
+export function SetYesDrop(id: number): Promise<AxiosResponse<Response<null>>> {
+  return request<null>({
+    url: `/api/reminds/yes/${id}`,
     method: "PUT",
-    data: {},
   });
 }
 
 /**
  * @description 设置未滴药
  * @author ZhangYù
- * @date 28/01/2022
+ * @date 02/02/2022
  * @export
- * @return {*}
+ * @param {number} id
+ * @return {*}  {Promise<AxiosResponse<Response<null>>>}
  */
-export function SetNoDrop(): Promise<AxiosResponse<Response<string>>> {
-  return request<string>({
-    url: "/set/no",
+export function SetNoDrop(id: number): Promise<AxiosResponse<Response<null>>> {
+  return request<null>({
+    url: `/api/reminds/no/${id}`,
     method: "PUT",
-    data: {},
   });
 }
 
-export function GetUseStatus(): Promise<
-  AxiosResponse<Response<UseStatusResponse>>
-> {
+/**
+ * @description 获取某日滴药状态
+ * @author ZhangYù
+ * @date 02/02/2022
+ * @export
+ * @param {Date} date
+ * @return {*}  {Promise<AxiosResponse<Response<UseStatusResponse>>>}
+ */
+export function GetUseStatus(
+  date: Date
+): Promise<AxiosResponse<Response<UseStatusResponse>>> {
   return request<UseStatusResponse>({
     url: "/api/reminds/get",
+    data: {
+      date,
+    },
     method: "GET",
   });
 }
