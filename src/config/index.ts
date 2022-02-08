@@ -7,14 +7,14 @@ export const APPPATH =
 /**
  * 线上环境
  */
-export const ONLINEHOST = "https://api.diamond2221.com";
+export const ONLINEHOST = "http://api.diamond2221.com";
 
 /**
  * 测试环境
  */
 // export const QAHOST = "http://api.diamond2221.com";
-// export const QAHOST = "http://127.0.0.1:7001";
-export const QAHOST = "http://192.168.1.15:7001";
+export const QAHOST = "http://127.0.0.1:7003";
+// export const QAHOST = "http://192.168.1.15:7003";
 // process.env.VUE_APP_BASE_API ||
 
 /**
