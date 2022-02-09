@@ -2,16 +2,23 @@
   <div class="page-wrapper">
     <el-card shadow="never" v-loading="viewLoading">
       <template #header>
-        <div class="card-header">{{ pageInfo.pageHeader }}</div>
-        <p class="card-extra">
-          <span>
-            {{ pageInfo.startWeek }}
-          </span>
-          <span> - </span>
-          <span>
-            {{ pageInfo.endWeek }} 眼药水阶段，当前为第{{ pageInfo.week }}周
-          </span>
-        </p>
+        <div class="card-header-wrapper">
+          <div class="card-header">{{ pageInfo.pageHeader }}</div>
+          <el-button @click="handleRefresh" :icon="Refresh" type="primary"
+            >刷新</el-button
+          >
+        </div>
+        <div class="card-extra">
+          <p>
+            <span>
+              {{ pageInfo.startWeek }}
+            </span>
+            <span> - </span>
+            <span> {{ pageInfo.endWeek }} 眼药水阶段 </span>
+          </p>
+
+          <p>当前为第{{ pageInfo.week }}周</p>
+        </div>
       </template>
       <el-table border :data="dataList">
         <el-table-column
@@ -49,6 +56,7 @@ import {
 } from "@/types/modules/home";
 import { ElMessageBox } from "element-plus";
 import { defineComponent, onMounted, ref } from "vue";
+import { Refresh } from "@element-plus/icons-vue";
 
 export default defineComponent({
   name: "Home",
@@ -88,6 +96,9 @@ export default defineComponent({
     };
 
     onMounted(() => {
+      handleLoadData();
+    });
+    const handleLoadData = () => {
       viewLoading.value = true;
       GetUseStatus(new Date())
         .then((res) => {
@@ -101,9 +112,13 @@ export default defineComponent({
         .catch(() => {
           viewLoading.value = false;
         });
-    });
+    };
 
     const isFirshColumn = (type: EColumnType) => type === EColumnType["text"];
+
+    const handleRefresh = () => {
+      handleLoadData();
+    };
 
     return {
       pageInfo,
@@ -113,6 +128,8 @@ export default defineComponent({
       handleStatusChange,
       EColumnType,
       isFirshColumn,
+      Refresh,
+      handleRefresh,
     };
   },
 });
@@ -124,17 +141,24 @@ export default defineComponent({
   /deep/ .el-card__header {
     padding-top: 2vmin;
     padding-bottom: 2vmin;
-    display: flex;
-    align-items: flex-end;
+    /* display: flex;
+    align-items: flex-end; */
     line-height: 1;
     vertical-align: bottom;
-    .card-header {
-      font-size: 28px;
-      margin-right: 20px;
+    .card-header-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .card-header {
+        font-size: 28px;
+        margin-right: 20px;
+        line-height: 1.8;
+      }
     }
     .card-extra {
       font-size: 16px;
       color: #333;
+      line-height: 1.5;
     }
   }
 }
