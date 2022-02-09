@@ -7,7 +7,7 @@ export const APPPATH =
 /**
  * 线上环境
  */
-export const ONLINEHOST = "http://api.diamond2221.com";
+export const ONLINEHOST = "https://api.diamond2221.com";
 
 /**
  * 测试环境

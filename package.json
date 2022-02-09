@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "delpoy": "scp -r ./dist/* root@123.56.192.23:/opt/web/eye-remind.diamond2221.com"
   },
   "dependencies": {
     "axios": "^0.25.0",
