@@ -4,6 +4,7 @@ export enum EColumnType {
 }
 
 export interface Column {
+  id: number;
   key: string;
   title: string;
   type: EColumnType;
@@ -12,9 +13,15 @@ export enum ERemindStatus {
   "yes" = 1,
   "no" = 0,
 }
+export enum EIsDel {
+  "unDel" = 1,
+  "del" = 0,
+}
+
 export interface RemindItem {
   name: string;
-  [key: string]: Remind | string;
+  medicineId: number;
+  [key: string]: Remind | string | number;
 }
 
 export interface Remind {
@@ -26,6 +33,7 @@ export interface Remind {
   date: Date;
   addTime: Date;
   updateTime: Date;
+  isDel: EIsDel;
 
   medicine?: MedicineEnum;
   time?: TimeEnum;
@@ -42,7 +50,7 @@ export interface TimeEnum {
 }
 export interface UseStatusResponse {
   columns: Column[];
-  list: RemindItem[];
+  rows: RemindItem[];
   pageInfo: {
     pageHeader: string;
     startWeek: string;
@@ -50,3 +58,11 @@ export interface UseStatusResponse {
     week: string;
   };
 }
+
+/**
+ * 设置药品时间
+ */
+export type SetRemindData = Pick<
+  Remind,
+  "timeId" | "medicineId" | "status" | "date"
+>;

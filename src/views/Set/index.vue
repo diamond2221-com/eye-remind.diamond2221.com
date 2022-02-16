@@ -4,9 +4,9 @@
       <template #header>
         <div class="card-header-wrapper">
           <div class="card-header">{{ pageInfo.pageHeader }}</div>
-          <el-button @click="handleRefresh" :icon="Refresh" type="primary"
-            >刷新</el-button
-          >
+          <el-button @click="handleRefresh" :icon="Refresh" type="primary">
+            刷新
+          </el-button>
         </div>
         <div class="card-extra">
           <p>
@@ -17,7 +17,7 @@
             <span> {{ pageInfo.endWeek }} 眼药水阶段 </span>
           </p>
 
-          <p>当前为第{{ pageInfo.week }}周</p>
+          <p>当前选择的为第{{ pageInfo.week }}周</p>
         </div>
       </template>
       <el-table border :data="dataList">
@@ -32,11 +32,11 @@
             <span v-if="isFirshColumn(column.type)">{{ row[column.key] }}</span>
 
             <el-checkbox
-              v-if="column.type === EColumnType['checkbox'] && row[column.key]"
-              v-model="row[column.key].status"
+              v-if="column.type === EColumnType['checkbox']"
+              :checked="!!row[column.key]"
               :true-label="1"
               :false-label="0"
-              @change="handleStatusChange($event, $index, column.key)"
+              @change="handleStatusChange($event, $index, column)"
             ></el-checkbox>
           </template>
         </el-table-column>
@@ -46,21 +46,21 @@
 </template>
 
 <script lang="ts">
-import { GetUseStatus, SetNoDrop, SetYesDrop } from "@/network/modules/home";
+import { GetRemindAll, SetDropTime } from "@/network/modules/set";
 import {
   Column,
   EColumnType,
   ERemindStatus,
-  Remind,
   RemindItem,
+  SetRemindData,
 } from "@/types/modules/home";
-import { ElMessageBox } from "element-plus";
 import { defineComponent, onMounted, ref } from "vue";
 import { Refresh } from "@element-plus/icons-vue";
 
 export default defineComponent({
-  name: "Home",
+  name: "Set",
   setup() {
+    const nowDate = ref<Date>(new Date());
     const pageInfo = ref({
       pageHeader: "",
       startWeek: "",
@@ -74,24 +74,24 @@ export default defineComponent({
     const handleStatusChange = async (
       checked: 0 | 1,
       index: number,
-      key: keyof RemindItem
+      column: Column
     ) => {
       try {
-        const id = (dataList.value[index][key] as Remind).id;
-        if (checked) {
-          await SetYesDrop(id);
-        } else {
-          await ElMessageBox.confirm(
-            "已经滴过眼药水了，确定要取消吗？",
-            "提示"
-          );
-          await SetNoDrop(id);
-        }
+        // const remind = dataList.value[index][column] as Remind;
+        const status = dataList.value[index][column.key]
+          ? ERemindStatus["no"]
+          : ERemindStatus["yes"];
+        const date = new Date(nowDate.value.getTime());
+        const data: SetRemindData = {
+          timeId: column.id,
+          medicineId: dataList.value[index].medicineId,
+          status,
+          date,
+        };
+        await SetDropTime(data);
+        handleRefresh();
       } catch (error) {
-        (dataList.value[index][key] as Remind).status =
-          checked === ERemindStatus["yes"]
-            ? ERemindStatus["no"]
-            : ERemindStatus["yes"];
+        //
       }
     };
 
@@ -100,14 +100,13 @@ export default defineComponent({
     });
     const handleLoadData = () => {
       viewLoading.value = true;
-      GetUseStatus(new Date())
+      const date = new Date(nowDate.value.getTime());
+      GetRemindAll(date)
         .then((res) => {
           columns.value = res.data.data.columns;
           dataList.value = res.data.data.rows;
           pageInfo.value = res.data.data.pageInfo;
-          setTimeout(() => {
-            viewLoading.value = false;
-          }, 200);
+          viewLoading.value = false;
         })
         .catch(() => {
           viewLoading.value = false;
