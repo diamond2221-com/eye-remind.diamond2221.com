@@ -2,6 +2,15 @@
   <div class="page-wrapper">
     <el-card shadow="never" v-loading="viewLoading">
       <template #header>
+        <el-date-picker
+          v-model="nowDate"
+          type="date"
+          placeholder="选择设置点药的日期"
+          :shortcuts="shortcuts"
+          size="small"
+          @change="handleDateChange"
+        >
+        </el-date-picker>
         <div class="card-header-wrapper">
           <div class="card-header">{{ pageInfo.pageHeader }}</div>
           <el-button @click="handleRefresh" :icon="Refresh" type="primary">
@@ -20,7 +29,8 @@
           <p>当前选择的为第{{ pageInfo.week }}周</p>
         </div>
       </template>
-      <el-table border :data="dataList">
+
+      <el-table border :data="dataList" :key="tableKey">
         <el-table-column
           v-for="column in columns"
           :key="column.key"
@@ -54,7 +64,7 @@ import {
   RemindItem,
   SetRemindData,
 } from "@/types/modules/home";
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, nextTick, onMounted, ref } from "vue";
 import { Refresh } from "@element-plus/icons-vue";
 
 export default defineComponent({
@@ -69,6 +79,7 @@ export default defineComponent({
     });
     const columns = ref<Column[]>([]);
     const dataList = ref<RemindItem[]>([]);
+    const tableKey = ref(0);
     const viewLoading = ref(false);
 
     const handleStatusChange = async (
@@ -106,6 +117,7 @@ export default defineComponent({
           columns.value = res.data.data.columns;
           dataList.value = res.data.data.rows;
           pageInfo.value = res.data.data.pageInfo;
+          tableKey.value++;
           viewLoading.value = false;
         })
         .catch(() => {
@@ -119,6 +131,42 @@ export default defineComponent({
       handleLoadData();
     };
 
+    const shortcuts = [
+      {
+        text: "今天",
+        value: new Date(),
+      },
+      {
+        text: "昨天",
+        value: () => {
+          const date = new Date();
+          date.setTime(date.getTime() - 3600 * 1000 * 24);
+          return date;
+        },
+      },
+      {
+        text: "一周前",
+        value: () => {
+          const date = new Date();
+          date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+          return date;
+        },
+      },
+      {
+        text: "一周后",
+        value: () => {
+          const date = new Date();
+          date.setTime(date.getTime() + 3600 * 1000 * 24 * 7);
+          return date;
+        },
+      },
+    ];
+
+    const handleDateChange = (date: any) => {
+      nowDate.value = date;
+      handleRefresh();
+    };
+
     return {
       pageInfo,
       columns,
@@ -129,6 +177,10 @@ export default defineComponent({
       isFirshColumn,
       Refresh,
       handleRefresh,
+      nowDate,
+      shortcuts,
+      handleDateChange,
+      tableKey,
     };
   },
 });
