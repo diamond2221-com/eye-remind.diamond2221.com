@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "scp -r ./dist/* root@123.56.192.23:/opt/web/eye-remind.diamond2221.com"
+    "deploy": "yarn build && scp -r ./dist/* root@123.56.192.23:/opt/web/eye-remind.diamond2221.com"
   },
   "dependencies": {
     "axios": "^0.25.0",
