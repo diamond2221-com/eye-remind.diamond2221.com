@@ -1,6 +1,6 @@
 import { request, AxiosResponse } from "@/network/index";
 import { Response } from "@/types/modules/common";
-import { UseStatusResponse } from "@/types/modules/home";
+import { Remind, UseStatusResponse } from "@/types/modules/home";
 
 /**
  * @description 设置以滴药
@@ -10,8 +10,10 @@ import { UseStatusResponse } from "@/types/modules/home";
  * @param {number} id
  * @return {*}  {Promise<AxiosResponse<Response<null>>>}
  */
-export function SetYesDrop(id: number): Promise<AxiosResponse<Response<null>>> {
-  return request<null>({
+export function SetYesDrop(
+  id: number
+): Promise<AxiosResponse<Response<Remind>>> {
+  return request<Remind>({
     url: `/api/reminds/yes/${id}`,
     method: "PUT",
   });

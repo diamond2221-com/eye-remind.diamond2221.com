@@ -1,12 +1,12 @@
 import { request, AxiosResponse } from "@/network/index";
 import { Response } from "@/types/modules/common";
-import { SetRemindData, UseStatusResponse } from "@/types/modules/home";
+import { Remind, SetRemindData, UseStatusResponse } from "@/types/modules/home";
 
 // 设置滴药时间
 export function SetDropTime(
   data: SetRemindData
-): Promise<AxiosResponse<Response<null>>> {
-  return request<null>({
+): Promise<AxiosResponse<Response<Remind>>> {
+  return request<Remind>({
     url: `/api/reminds/set`,
     method: "POST",
     data,

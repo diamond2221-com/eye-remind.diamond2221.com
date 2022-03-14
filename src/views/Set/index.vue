@@ -88,7 +88,6 @@ export default defineComponent({
       column: Column
     ) => {
       try {
-        // const remind = dataList.value[index][column] as Remind;
         const status = dataList.value[index][column.key]
           ? ERemindStatus["no"]
           : ERemindStatus["yes"];
@@ -99,8 +98,12 @@ export default defineComponent({
           status,
           date,
         };
-        await SetDropTime(data);
-        handleRefresh();
+        const res = await SetDropTime(data);
+        if (status === ERemindStatus["yes"]) {
+          dataList.value[index][column.key] = res.data.data;
+        } else {
+          delete dataList.value[index][column.key];
+        }
       } catch (error) {
         //
       }

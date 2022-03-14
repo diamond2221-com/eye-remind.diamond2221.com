@@ -84,13 +84,16 @@ export default defineComponent({
       try {
         const id = (dataList.value[index][key] as Remind).id;
         if (checked) {
-          await SetYesDrop(id);
+          const res = await SetYesDrop(id);
+          (dataList.value[index][key] as Remind).remark =
+            res.data.data.remark ?? "";
         } else {
           await ElMessageBox.confirm(
             "已经滴过眼药水了，确定要取消吗？",
             "提示"
           );
           await SetNoDrop(id);
+          (dataList.value[index][key] as Remind).remark = "";
         }
       } catch (error) {
         (dataList.value[index][key] as Remind).status =
