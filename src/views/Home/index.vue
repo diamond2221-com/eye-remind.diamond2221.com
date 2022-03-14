@@ -26,18 +26,23 @@
           :key="column.key"
           :label="column.title"
           :fixed="isFirshColumn(column.type)"
-          :width="isFirshColumn(column.type) ? 100 : 100"
+          :width="isFirshColumn(column.type) ? 100 : 105"
+          show-overflow-tooltip
         >
           <template v-slot="{ row, $index }">
             <span v-if="isFirshColumn(column.type)">{{ row[column.key] }}</span>
 
-            <el-checkbox
+            <template
               v-if="column.type === EColumnType['checkbox'] && row[column.key]"
-              v-model="row[column.key].status"
-              :true-label="1"
-              :false-label="0"
-              @change="handleStatusChange($event, $index, column.key)"
-            ></el-checkbox>
+            >
+              <el-checkbox
+                v-model="row[column.key].status"
+                :true-label="1"
+                :false-label="0"
+                @change="handleStatusChange($event, $index, column.key)"
+              ></el-checkbox>
+              <div class="remark">{{ row[column.key].remark }}</div>
+            </template>
           </template>
         </el-table-column>
       </el-table>
@@ -160,6 +165,12 @@ export default defineComponent({
       color: #333;
       line-height: 1.5;
     }
+  }
+  .remark {
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 </style>
