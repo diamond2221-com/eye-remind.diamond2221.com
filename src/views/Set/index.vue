@@ -64,7 +64,7 @@ import {
   RemindItem,
   SetRemindData,
 } from "@/types/modules/home";
-import { defineComponent, nextTick, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { Refresh } from "@element-plus/icons-vue";
 
 export default defineComponent({
